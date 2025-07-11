@@ -76,9 +76,9 @@ export const TablesC =({navigation})=>{
               style={styles.search.input}
               onChangeText={(text)=>onChange(text)}></TextInput>
 
-              <Pressable style={styles.search.boton} onPress={()=>toFind()}><Text>Busqueda   </Text></Pressable>
-              <Pressable style={styles.search.boton} onPress={()=>setSearching({txt:"telefono",spc:"phone"})}><Text>Telefono   </Text></Pressable>
-              <Pressable style={styles.search.boton} onPress={()=>setSearching({txt:"nombre",spc:"name"})}><Text>  Nombre</Text></Pressable>
+              <Pressable style={styles.search.boton} onPress={()=>toFind()}><Text>Buscar   </Text></Pressable>
+              <Pressable style={styles.search.boton} onPress={()=>setSearching({txt:"telefono",spc:"phone"})}><Text> Por Telefono   </Text></Pressable>
+              <Pressable style={styles.search.boton} onPress={()=>setSearching({txt:"nombre",spc:"name"})}><Text>  o por Nombre</Text></Pressable>
               {}
             </View>
             <Text style={styles.subTitle}>Datos registrados</Text>
