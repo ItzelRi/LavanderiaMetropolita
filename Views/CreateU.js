@@ -1,14 +1,11 @@
+import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import { useNavigation } from '@react-navigation/native';
 import { useState } from "react";
 import {  Pressable, StyleSheet, Text, TextInput, View, Alert } from "react-native";
 
-export const UpdateG=({route})=>{
-  const {navigate} = useNavigation();
-
-  const { garmentData } = route.params
+export const CreateU=()=>{
     const [data, setData] = useState({})
-  
+
     const onChange=(target, value)=>{
       const newData=data
       console.log(target, value)
@@ -16,40 +13,46 @@ export const UpdateG=({route})=>{
       setData(newData)
     }
 
-      const updateGarments= async()=>{
+      const CreateUser= async()=>{
     try {
-      await axios.put(`https://7qnhlz7j-5000.usw3.devtunnels.ms/garments/update/${garmentData.id}`, data)
-      Alert.alert("Se ha actualizado", `La prenda,  se ha actualizado correctamente`)
-      navigate("TableG")
+        console.log("mandare ", data)
+        await axios.post("https://7qnhlz7j-5000.usw3.devtunnels.ms/users/create", data)
+      Alert.alert("Creado!", "Su usuario se ha creado con exito")
     } catch (error) {
-      Alert.alert("Algo salio mal", `No se actualizo la prenda, ${error}`)
+      Alert.alert("Algo salio mal", `No se ha creado su usuario, ${error}`)
     }
   }
 
+  const {navigate} = useNavigation();
   return (
     <>
       <View style={styles.containerMain}>
         <View style={styles.containerContent}>
-          <Text style={styles.title}>Actualizar Prenda</Text>
+          <Text style={styles.title}>Registrar Usuario</Text>
 
-          <Text style={styles.label}>Type:</Text>
-          <TextInput style={styles.input} onChangeText={(text) => onChange("type", text)}
-          placeholder={garmentData.type}></TextInput>
+          <Text style={styles.label}>Nombre:</Text>
+          <TextInput style={styles.input} onChangeText={(text) => onChange("name", text)}
+          placeholder={""}></TextInput>
 
-          <Text style={styles.label}>Descripcion:</Text>
-          <TextInput style={styles.input} onChangeText={(text) => onChange("description", text)} 
-          placeholder={garmentData.description}
-            multiline={true}
-            numberOfLines={4}></TextInput>
+          <Text style={styles.label}>Correo:</Text>
+          <TextInput style={styles.input} onChangeText={(text) => onChange("email", text)} 
+            placeholder={""}></TextInput>
 
-          <Text style={styles.label}>Observaciones:</Text>
-          <TextInput style={styles.input} onChangeText={(text) => onChange("observations", text)}
-            placeholder={garmentData.observations}
-            multiline={true}
-            numberOfLines={4}></TextInput>
+          <Text style={styles.label}>Rol:</Text>
+          <TextInput style={styles.input} onChangeText={(text) => onChange("rol", text)}
+            placeholder={""}></TextInput>
 
-          <Pressable style={styles.send} onPress={() => updateGarments()}>
-            <Text style={styles.textButton}>Actualizar</Text>
+
+          <Text style={styles.label}>Contraseña:</Text>
+          <TextInput style={styles.input} onChangeText={(text) => onChange("password", text)}
+            placeholder={""}></TextInput>
+
+          <Pressable style={styles.send} onPress={() => CreateUser()}>
+            <Text style={styles.textButton}>Enviar</Text>
+          </Pressable>
+          
+          <Pressable style={styles.send} onPress={() => navigate("TableU")}>
+            <Text style={styles.textButton}>Salir</Text>
           </Pressable>
         </View>
       </View>
@@ -59,7 +62,7 @@ export const UpdateG=({route})=>{
 
 const styles = StyleSheet.create({
   containerMain: {
-    marginTop: 200, 
+    marginTop: 100, 
   },
   title: {
     fontSize: 25,

@@ -3,10 +3,10 @@ import { useNavigation } from '@react-navigation/native';
 import { useState } from "react";
 import {  Pressable, StyleSheet, Text, TextInput, View, Alert } from "react-native";
 
-export const UpdateG=({route})=>{
+export const UpdateU=({route})=>{
   const {navigate} = useNavigation();
 
-  const { garmentData } = route.params
+  const { userData } = route.params
     const [data, setData] = useState({})
   
     const onChange=(target, value)=>{
@@ -16,13 +16,13 @@ export const UpdateG=({route})=>{
       setData(newData)
     }
 
-      const updateGarments= async()=>{
+      const updateUser= async()=>{
     try {
-      await axios.put(`https://7qnhlz7j-5000.usw3.devtunnels.ms/garments/update/${garmentData.id}`, data)
-      Alert.alert("Se ha actualizado", `La prenda,  se ha actualizado correctamente`)
-      navigate("TableG")
+      await axios.put(`https://7qnhlz7j-5000.usw3.devtunnels.ms/users/update/${userData.id}`, data)
+      Alert.alert("Se ha actualizado", `Su usuario, se ha actualizado correctamente`)
+      navigate("TableU")
     } catch (error) {
-      Alert.alert("Algo salio mal", `No se actualizo la prenda, ${error}`)
+      Alert.alert("Algo salio mal", `No se actualizo el usuario, ${error}`)
     }
   }
 
@@ -30,25 +30,25 @@ export const UpdateG=({route})=>{
     <>
       <View style={styles.containerMain}>
         <View style={styles.containerContent}>
-          <Text style={styles.title}>Actualizar Prenda</Text>
+          <Text style={styles.title}>Actualizar Usuario</Text>
 
-          <Text style={styles.label}>Type:</Text>
-          <TextInput style={styles.input} onChangeText={(text) => onChange("type", text)}
-          placeholder={garmentData.type}></TextInput>
+          <Text style={styles.label}>Nombre:</Text>
+          <TextInput style={styles.input} onChangeText={(text) => onChange("name", text)}
+          placeholder={userData.type}></TextInput>
 
-          <Text style={styles.label}>Descripcion:</Text>
-          <TextInput style={styles.input} onChangeText={(text) => onChange("description", text)} 
-          placeholder={garmentData.description}
-            multiline={true}
-            numberOfLines={4}></TextInput>
+          <Text style={styles.label}>Correo:</Text>
+          <TextInput style={styles.input} onChangeText={(text) => onChange("email", text)} 
+          placeholder={userData.description}></TextInput>
 
-          <Text style={styles.label}>Observaciones:</Text>
-          <TextInput style={styles.input} onChangeText={(text) => onChange("observations", text)}
-            placeholder={garmentData.observations}
-            multiline={true}
-            numberOfLines={4}></TextInput>
+          <Text style={styles.label}>Rol:</Text>
+          <TextInput style={styles.input} onChangeText={(text) => onChange("rol", text)}
+            placeholder={userData.observations}></TextInput>
 
-          <Pressable style={styles.send} onPress={() => updateGarments()}>
+          <Text style={styles.label}>Estado:</Text>
+          <TextInput style={styles.input} onChangeText={(text) => onChange("state", text)}
+            placeholder={userData.observations}></TextInput>
+
+          <Pressable style={styles.send} onPress={() => updateUser()}>
             <Text style={styles.textButton}>Actualizar</Text>
           </Pressable>
         </View>

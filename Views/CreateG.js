@@ -5,8 +5,7 @@ import {  Pressable, StyleSheet, Text, TextInput, View, Alert } from "react-nati
 
 export const CreateG=()=>{
     const [data, setData] = useState({})
-  
-    const {navigate}= useNavigation()
+
     const onChange=(target, value)=>{
       const newData=data
       console.log(target, value)
@@ -17,13 +16,14 @@ export const CreateG=()=>{
       const CreateGarment= async()=>{
     try {
         console.log("mandare ", data)
-        ///await axios.post("https://ngntrmk5-5000.usw3.devtunnels.ms/garments/create", data)
+        await axios.post("https://7qnhlz7j-5000.usw3.devtunnels.ms/garments/create", data)
       Alert.alert("Creado!", "La prenda se ha creado con exito")
     } catch (error) {
       Alert.alert("Algo salio mal", `No se ha creado la prenda, ${error}`)
     }
   }
 
+  const {navigate} = useNavigation();
   return (
     <>
       <View style={styles.containerMain}>

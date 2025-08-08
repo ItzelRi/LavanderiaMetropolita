@@ -23,7 +23,7 @@ export const CheckOut =({route})=>{
                 console.log(garment)
                 for (const service of garment.services) {
                     console.log(service)
-                    subTotal += service.quantity * service.unitPrice
+                    subTotal += service.quantity * service.price
                 }
             }
         }
@@ -40,8 +40,8 @@ export const CheckOut =({route})=>{
           const today = new Date();
         const fechaActual = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
           dataAMandar.estimated_delivery_date=fechaActual
-          await axios.post("https://ngntrmk5-5000.usw3.devtunnels.ms/orders/create",dataAMandar)
-          Alert.alert("Orden registrada", "Ves burro, si se pudo XD")
+          await axios.post("https://7qnhlz7j-5000.usw3.devtunnels.ms/orders/create",dataAMandar)
+          Alert.alert("Orden registrada", "Que tenga buen dia!")
         } catch (error) {
           Alert.alert("Sucedio un error", `Valio madres: ${error}`)
         }
@@ -52,7 +52,7 @@ export const CheckOut =({route})=>{
         <>
             <View style={styles.container}>
             <View style={styles.nav}>
-              <Text style={styles.title}>Resumen</Text>
+              <Text style={styles.title}>Resumen de Orden</Text>
             </View>
   
             <View style={styles.scrollViewContainer}>
@@ -95,12 +95,12 @@ export const CheckOut =({route})=>{
 
                               <View style={styles.textoHorizontal}>
                                     <Text style={styles.serviceWithinGarment.subTitle}>Precio unitario:</Text>
-                                    <Text>{String(servis.unitPrice)}</Text>
+                                    <Text>{String(servis.price)}</Text>
                               </View>
 
                               <View style={styles.textoHorizontal}>
                                     <Text style={styles.serviceWithinGarment.subTitle}>Subtotal de la prenda:</Text>
-                                    <Text>{String(servis.unitPrice*servis.quantity)}</Text>
+                                    <Text>{String(servis.price*servis.quantity)}</Text>
                               </View>
                             </View>
                           ))
@@ -120,6 +120,9 @@ export const CheckOut =({route})=>{
                     <Pressable style={styles.totalContainer.boton} onPress={()=>registerOrder()}>
                         <Text style={styles.totalContainer.boton.label}>Realizar pedido</Text>
                     </Pressable>
+                    <Pressable style={styles.totalContainer.boton} onPress={() => navigate("CreateOrder")}>
+                        <Text style={styles.totalContainer.boton.label}>Salir</Text>
+                    </Pressable>
               </View>
             </View>
         </>
@@ -130,21 +133,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 9,
-    paddingTop: 20,
+    paddingTop: 1,
+    marginBottom: 3,
     backgroundColor: "#fff"
   },
   title:{
     fontSize: 25,
     fontWeight: "bold",
     alignSelf: "center",
-    marginBottom: 3
+    color: "#3924bb"
   },
   subTitle:{
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
-    color: "#3924bb",
-    marginBottom: 3
+    color: "#3924bb"
   },
   nav:{
     flexDirection: 'row',
@@ -162,7 +165,7 @@ const styles = StyleSheet.create({
     width:"100%",
     height:"100%",
     backgroundColor:"#fff",
-    marginTop:10
+    marginTop:2
   },
   label:{
    fontSize: 18,
@@ -212,7 +215,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 2,
     backgroundColor: "#7a67ee",
     padding: 12,
     borderRadius: 10,

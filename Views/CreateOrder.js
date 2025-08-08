@@ -1,36 +1,18 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBar } from 'expo-status-bar';
 import { Button, Pressable, StyleSheet, Text, TextInput, View, Image, Alert, ScrollView } from 'react-native';
 import { Picker } from "@react-native-picker/picker";
-
+import axios from "axios";
 
 export const CreateOrder =({navigation})=>{ 
 
-     const services= [ 
-        {
-            name: "Lavado",
-            quantity: 0,
-            unitPrice:22
-        },
-        {
-            name: "Plachado",
-            quantity: 0,
-            unitPrice:60
-        },
-        {
-            name: "Tintoreria",
-            quantity: 0,
-            unitPrice:0
-        },
-        {
-            name: "Especial",
-            quantity: 0,
-            unitPrice:0
-        },
-    ]
 
-    const garmentsList = ["Camisa", "Falda", "Traje", "Pantalón"];
+    const [services, setservices] = useState([{
+        
+        name:"",
+    price:0}]);
+    const [garmentsList, setgarmentsList] = useState([]);
     const defaultGarment = { 
         type: "Camisa",
         description: "",
@@ -109,12 +91,13 @@ const onChangeService = (selectedValue, ig, is) => {
                 console.log(garment)
                 for (const service of garment.services) {
                     console.log(service)
-                    subTotal += service.quantity * service.unitPrice
+                    subTotal += service.quantity * service.price
                 }
             }
         }
         setTotal(subTotal)
     }
+    
   
     const onChange=(target, value)=>{
       const newData=DATA
@@ -122,6 +105,43 @@ const onChangeService = (selectedValue, ig, is) => {
       newData[target]= value
       setDATA(newData)
     }
+
+    //Funcion para traernos los servicios de la BD
+
+    const bringService =async()=>{
+        try {
+            const servicesBrought= await axios.get("https://7qnhlz7j-5000.usw3.devtunnels.ms/services/getAll")
+            setservices(servicesBrought.data.services)
+
+        } catch (error) {
+            Alert.alert("Sucedio un error", error)
+        }
+    }
+
+    const bringGarments =async()=>{
+        try {
+           const garmentsBrought= await axios.get("https://7qnhlz7j-5000.usw3.devtunnels.ms/garments/getAll")
+            const garmentsArray= garmentsBrought.data.garments
+
+            const garmentsFiltered=[]
+            for(const element of garmentsArray){
+                garmentsFiltered.push(element.type)
+            }
+            
+
+            console.log("Soy garments lekdw;emd;lewmd filtered================================",garmentsFiltered)
+            
+            setgarmentsList(garmentsFiltered)
+
+        } catch (error) {
+                        Alert.alert("Sucedio un error", error)
+
+        }
+    }
+    useEffect(() => {
+        bringGarments()
+        bringService()
+    }, []);
 
     const {navigate}= useNavigation()
     return (
@@ -141,9 +161,9 @@ const onChangeService = (selectedValue, ig, is) => {
                     <View style={styles.garment}>
                         {
                             i > 0 && (
-                                <Pressable onPress={()=>deleteGarment(i)}>
+                                <Pressable style={styles.boton} onPress={()=>deleteGarment(i)} >
                                     <Text style={styles.boton.label.lil}>Eliminar prenda</Text>
-                                </Pressable>
+                                </Pressable>  
                             )
                         }
                         <Text>{i + 1}</Text>
@@ -172,7 +192,9 @@ const onChangeService = (selectedValue, ig, is) => {
                                
                                 {
                                     is > 0 && (                                            
-                                    <Pressable onPress={() => deleteServiceToGarment(i, is)}><Text style={styles.boton.label.lil}>Eliminar servicio</Text></Pressable>   
+                                    <Pressable style={styles.boton} onPress={()=>deleteServiceToGarment(i, is)} >
+                                        <Text style={styles.boton.label.lil}>Eliminar servicio</Text>
+                                    </Pressable>    
                                          )
                                 }
 
@@ -195,15 +217,14 @@ const onChangeService = (selectedValue, ig, is) => {
                                         ></TextInput> 
 
                                     <Text style={styles.label}>Precio:</Text>
-                                        <TextInput style={styles.input} keyboardType="numeric"
-                                        onChangeText={(text) => onChangeServiceFields("unitPrice", text, i, is)}
-                                        ></TextInput> 
+                                        {/* <TextInput style={styles.input} keyboardType="numeric"
+                                        onChangeText={(text) => onChangeServiceFields("price", text, i, is)}
+                                        ></TextInput>  */}<Text style={styles.label}>{service.price}</Text>
 
-                                    <Pressable  onPress={() => addServiceToGarment(i)} >
-                                        <Text style={styles.boton.label.lil}>Agregar servicio</Text>
-                                     </Pressable>
 
-                                                                       
+                                        <Pressable style={styles.boton} onPress={()=>addServiceToGarment(i)} >
+                                            <Text style={styles.boton.label.lil}>Agregar servicio</Text>
+                                        </Pressable>               
                                </View>
    
                             ))
@@ -222,6 +243,10 @@ const onChangeService = (selectedValue, ig, is) => {
 
             <Pressable style={styles.boton} onPress={() => navigation.navigate('CheckOut', { OrdenCompleta: order })}>
                 <Text style={styles.boton.label}>CheckOut</Text>
+            </Pressable>
+
+            <Pressable style={styles.boton} onPress={() => navigate("Dashboard")}>
+                <Text style={styles.boton.label}>Salir</Text>
             </Pressable>
                 </View>
             </View>
@@ -242,14 +267,15 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "bold",
     alignSelf: "center",
-    marginBottom: 3
+    marginBottom: 3,
+    color: "#3924bb"
   },
   subTitle:{
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
     color: "#3924bb",
-    marginBottom: 3   
+    marginBottom: 3  
   },
   nav:{
     flexDirection: 'row',

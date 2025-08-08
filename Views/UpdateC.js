@@ -1,9 +1,11 @@
 import axios from "axios";
 import { useState } from "react";
+import { useNavigation } from '@react-navigation/native';
 import {  Pressable, StyleSheet, Text, TextInput, View, Alert } from "react-native";
 
 export const UpdateC=({route})=>{
-  const { userData } = route.params
+  const {navigate} = useNavigation();
+  const { clientsData } = route.params
     const [data, setData] = useState({
       rol:"cliente"})
   
@@ -14,10 +16,11 @@ export const UpdateC=({route})=>{
       setData(newData)
     }
 
-      const UpdateC= async()=>{
+      const updateClients= async()=>{
     try {
-      const updated= await axios.put(`https://ngntrmk5-5000.usw3.devtunnels.ms/clients/update/${userData.id}`, data)
+      await axios.put(`https://7qnhlz7j-5000.usw3.devtunnels.ms/clients/update/${clientsData.id}`, data)
       Alert.alert("Se ha actualizado", `Su cliente, ${data.name}, se ha actualizado correctamente`)
+      navigate("TablesC")
     } catch (error) {
       Alert.alert("Algo salio mal", `No se actualizo su cliente, ${error}`)
     }
@@ -31,19 +34,19 @@ export const UpdateC=({route})=>{
 
           <Text style={styles.label}>Nombre:</Text>
           <TextInput style={styles.input} onChangeText={(text) => onChange("name", text)}
-          placeholder={userData.name}></TextInput>
+          placeholder={clientsData.name}></TextInput>
 
           <Text style={styles.label}>Numero de telefono:</Text>
           <TextInput style={styles.input} onChangeText={(text) => onChange("phone_number", text)} 
-          placeholder={userData.phone_number}></TextInput>
+          placeholder={clientsData.phone_number}></TextInput>
 
           <Text style={styles.label}>Direccion:</Text>
           <TextInput style={styles.input} onChangeText={(text) => onChange("address", text)}
-            placeholder={userData.address}
+            placeholder={clientsData.address}
             multiline={true}
             numberOfLines={4}></TextInput>
 
-          <Pressable style={styles.send} onPress={() => UpdateC()}>
+          <Pressable style={styles.send} onPress={() => updateClients()}>
             <Text style={styles.textButton}>Actualizar</Text>
           </Pressable>
         </View>

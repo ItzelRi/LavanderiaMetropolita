@@ -1,90 +1,58 @@
 import { ScrollView, Pressable, StyleSheet, Text, TextInput, View, Alert } from 'react-native'
 import { Table, Row, Rows } from 'react-native-table-component'
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react"
 import axios from "axios"
 
-export const TablesC =({navigation})=>{ 
-      const [dataSearched, setdataSearched] = useState()
-      const [dataTable, setdataTable] = useState([])
+export const ListOP =()=>{ 
+      const [dataSearched, setdataSearched] = useState([])
+      const [Pagination, setPagination] = useState(1)
 
-      const onChange=(value)=>{
-        setdataSearched(value)
-        console.log(value)
-      }
+    useEffect(() => {
+        getAllOrders()
+    }, [Pagination]);
 
-      const searchBD = async(parameter, filter)=>{
-        try {
-          if(!parameter || !filter){
-            const dataBD = await axios.get("https://7qnhlz7j-5000.usw3.devtunnels.ms/clients/search")
-            setdataTable(dataBD.data)
-          }else{
-            const dataBD = await axios.get(`https://7qnhlz7j-5000.usw3.devtunnels.ms/clients/search?filter=${filter}&parameter=${parameter}`)
-              setdataTable(dataBD.data)
-
-          }
-        } catch (error) {
-          Alert.alert("Algo salio mal", `No se trajo la BD, ${error}`)
-        }
-      }
-
-      useEffect(() => {
-        searchBD()
-      }, []);
-
-      const deleteClient = async(ID)=>{
-          try {
-           await axios.delete(`https://7qnhlz7j-5000.usw3.devtunnels.ms/clients/delete/${ID}`)
-            Alert.alert("Usuario elimiando con exito")
-            searchBD()
-          } catch (error) {
-           Alert.alert("Algo salio mal", `No se elimino al cliente, ${error}`)
-          }
-      }
-
+    const getAllOrders=async() =>{
+    try {
+           console.log("Entre a get all ordes")
+      const pendingOrders= await axios.get(`https://7qnhlz7j-5000.usw3.devtunnels.ms/orders/get-pending-orders-dashboard?pagination=${Pagination}`)
+     console.log(pendingOrders.data)
+      setdataSearched(pendingOrders.data)
+    } catch (error) {
+      console.log(error)
+      //Alert.alert("Error", "No se pudieron trater todas las ordenes")
+    }
+  }
     const {navigate}= useNavigation()
 
-    const mapped = dataTable.map((register)=>( 
-    [register.name,register.phone_number,register.address,
+    const mapped = dataSearched.map((register)=>( 
+    [ register.user_name,register.client_name,register.created_at,register.state,
       (<>
-      <View style={styles.actionsContainer}> 
-            <Pressable style={styles.action} onPress={()=>deleteClient(register.id)}>
-              <Text>🗑️</Text>
-            </Pressable>
-            <Pressable style={styles.action} onPress={() => navigation.navigate("UpdateC", { clientsData: register })}>
-              <Text>📝</Text>
-            </Pressable>
-            </View>
-      </>)]
-    ))
+        <Pressable onPress={() => navigate('OrderDet', { dataOrder: register })}>
+            <Text>{register.id}</Text>
+        </Pressable></>)
+        ]))
+
+        const header=[ (
+        <Pressable style={styles.arrow} onPress={()=>setPagination(Pagination-1)}><Text>                ◀️</Text></Pressable>),
+            Pagination, 
+        (<Pressable style={styles.arrow} onPress={()=>setPagination(Pagination+1)}><Text>              ▶️</Text></Pressable>), 
+        ]
 
 return (
         <>
         <View style={styles.container}>
             <View style={styles.nav}>
-              <Text style={styles.title}>Clientes ingresados</Text>
+              <Text style={styles.title}>Ordenes Pendientes</Text>
             </View>
 
-            <View style={styles.search}>
-              <TextInput
-              placeholder={`Buscar...`}
-              style={styles.search.input}
-              onChangeText={(text)=>onChange(text)}></TextInput>
-              <Pressable style={styles.sbot} onPress={()=>searchBD(dataSearched, "phone")}><Text>Telefono</Text></Pressable>
-              <Pressable style={styles.sbot} onPress={()=>searchBD(dataSearched, "name")}><Text>Nombre</Text></Pressable>
-              <Pressable style={styles.sboty} onPress={()=>searchBD()}><Text> Reiniciar</Text></Pressable>
-              {}
-            </View>
-            <Text style={styles.subTitle}>Datos registrados</Text>
             <ScrollView style={styles.mainContent}>
               <Table style={styles.tabla}> 
-                <Row data={[ 'Nombre', 'Telefono', 'Domicilio', "Acciones"]} style={styles.head} textStyle={styles.text}/>
+                <Row data={header}/>
+                <Row data={[ 'Vendedor', 'Cliente', 'Fecha de orden', "Estado", "No.Orden"]} style={styles.head} textStyle={styles.text}/>
                 <Rows data={mapped} textStyle={styles.text}/>
               </Table>
             </ScrollView>
-              <Pressable style={styles.send} onPress={() => navigation.navigate("CreateC")} >
-                <Text style={styles.textButton}>Registrar Cliente</Text>
-              </Pressable>
               <Pressable style={styles.send} onPress={() => navigate("Dashboard")}>
                 <Text style={styles.textButton}>Salir</Text>
               </Pressable>
@@ -98,14 +66,6 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingTop: 30,
     backgroundColor: '#fff',
-  },
-  subTitle: {
-    fontSize: 20,
-    marginTop: 30,
-    fontWeight: "bold",
-    marginHorizontal: 15,
-    textAlign: "center",
-    color:"#3924bb"
   },
   head: {
     backgroundColor: "#7a67ee",
@@ -127,7 +87,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   text: {
-    fontSize: 16,
+    fontSize: 13,
     color: "black",
     fontWeight: "bold",
     textAlign: "center"
@@ -138,7 +98,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
     marginBottom: 20,
-    color: "#000"
+    color:"#3924bb"
   },
   search: {
     flexDirection: "row",
@@ -237,5 +197,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     textAlign: "center", 
     marginStart:20,
+  },
+  arrow:{
+    fontSize: 20,
+    fontWeight: "bold"
   }
 });

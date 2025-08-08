@@ -4,41 +4,41 @@ import { useNavigation } from "@react-navigation/native"
 import { useState, useEffect } from "react"
 import axios from "axios"
 
-export const TableS =()=>{ 
-  const navigation = useNavigation()
+export const TableU =()=>{
+  const navigation = useNavigation() 
         useEffect(()=>{
         searchBD()
         },[])
-        
-      const [dataTable, setdataTable] = useState([])
-      const searchBD=async()=>{
+
+        const [dataTable, setdataTable] = useState([])
+        const searchBD=async()=>{
         try{
-             const findBD = await axios.get("https://7qnhlz7j-5000.usw3.devtunnels.ms/services/getAll")
-            console.log(findBD.data.services) 
-            setdataTable(findBD.data.services)
+            const findBD = await axios.get("https://7qnhlz7j-5000.usw3.devtunnels.ms/users/getAll")
+            console.log("soy la info de usuarios de la bd:", findBD.data) 
+            setdataTable(findBD.data)
         } catch (error) {
-           Alert.alert("Error al traer", `No se trajo su BD, ${error}`)
-          }
-      }
-        
-      const deleteService= async(ID)=>{
+            Alert.alert("Error al traer", `No se trajo su BD, ${error}`)
+        }
+    }
+    
+      const deleteUser= async(ID)=>{
           try {
-           await axios.delete(`https://7qnhlz7j-5000.usw3.devtunnels.ms/services/delete/${ID}`)
-            Alert.alert("Servicio elimiando con exito")
+            await axios.delete(`https://7qnhlz7j-5000.usw3.devtunnels.ms/users/delete/${ID}`)
+            Alert.alert("Usuario elimiando con exito")
             searchBD()
           } catch (error) {
-           Alert.alert("Algo salio mal", `No se elimino el servicio, ${error}`)
+           Alert.alert("Algo salio mal", `No se elimino el usuario, ${error}`)
           }
       }
 
     const mapped = dataTable.map((register)=>( 
-    [register.id,register.name,register.description,register.price,
+    [register.id,register.name,register.email,register.rol,
       (<>
-      <View style={styles.actionsContainer}> 
-      <Pressable style={styles.action} onPress={()=>deleteService(register.id)}>
+      <View style={styles.actionsContainer}>
+      <Pressable style={styles.action} onPress={()=>deleteUser(register.id)}>
         <Text>🗑️</Text>
       </Pressable>
-      <Pressable style={styles.action} onPress={() => navigation.navigate("UpdateS", { serviceData: register })}>
+      <Pressable style={styles.action} onPress={() => navigation.navigate("UpdateU", { userData: register })}>
         <Text>📝</Text>
       </Pressable>
       </View>
@@ -50,17 +50,18 @@ const {navigate} = useNavigation();
         <>
         <View style={styles.container}>
             <View style={styles.nav}>
-              <Text style={styles.title}>Servicios</Text>
+              <Text style={styles.title}>Usuarios</Text>
             </View>
             <Text style={styles.subTitle}>Datos registrados</Text>
             <ScrollView style={styles.scrollView}>
               <Table style={styles.tabla}> 
-                <Row data={["ID","Nombre","Descripcion","Precio","Acciones"]} style={styles.head} textStyle={styles.text1}/>
+                <Row data={["ID","Nombre","Correo","Rol","Acciones"]} style={styles.head} textStyle={styles.text1}/>
                 <Rows data={mapped} textStyle={styles.text2}/>
-              </Table>  
+              </Table>
+
             </ScrollView>  
-                <Pressable style={styles.send} onPress={() => navigation.navigate("CreateS")} >
-                    <Text style={styles.textButton}>Añadir Servicio</Text>
+                <Pressable style={styles.send} onPress={() => navigation.navigate("CreateU")} >
+                    <Text style={styles.textButton}>Registrar Usuario</Text>
                 </Pressable>
                 <Pressable style={styles.send} onPress={() => navigate("Dashboard")}>
                     <Text style={styles.textButton}>Salir</Text>
@@ -70,7 +71,7 @@ const {navigate} = useNavigation();
     )}
 
 const styles = StyleSheet.create({
-  container: {
+container: {
     flex: 1,
     padding: 16,
     paddingTop: 30,
@@ -129,7 +130,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     flexWrap: "wrap",
     marginVertical:"20%"
-    
   },
   title: {
     fontSize: 25,

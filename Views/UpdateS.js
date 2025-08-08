@@ -1,10 +1,13 @@
 import axios from "axios";
+import { useNavigation } from '@react-navigation/native';
 import { useState } from "react";
 import {  Pressable, StyleSheet, Text, TextInput, View, Alert } from "react-native";
 
 export const UpdateS=({route})=>{
-  const { serviceData } = route.params
-    const [data, setData] = useState({})
+  const {navigate} = useNavigation();
+  
+  const { serviceData } = route.params;
+  const [data, setData] = useState({})
   
     const onChange=(target, value)=>{
       const newData=data
@@ -13,10 +16,11 @@ export const UpdateS=({route})=>{
       setData(newData)
     }
 
-      const UpdateS= async()=>{
+      const updateServices= async()=>{
     try {
-      //const updated= await axios.put(`https://ngntrmk5-5000.usw3.devtunnels.ms/services/update/${serviceData.id}`, data)
+      await axios.put(`https://7qnhlz7j-5000.usw3.devtunnels.ms/services/update/${serviceData.id}`, data)
       Alert.alert("Se ha actualizado", `El servicio, se ha actualizado correctamente`)
+      navigate("TableS")
     } catch (error) {
       Alert.alert("Algo salio mal", `No se actualizo el servicio, ${error}`)
     }
@@ -42,7 +46,7 @@ export const UpdateS=({route})=>{
           <TextInput keyboardType="numeric" style={styles.input} onChangeText={(text) => onChange("price", text)}
             placeholder={String(serviceData.price)}></TextInput>
 
-          <Pressable style={styles.send}  onPress={() => UpdateS()}>
+          <Pressable style={styles.send}  onPress={() => updateServices()}>
             <Text style={styles.textButton}>Actualizar</Text>
           </Pressable>
         </View>

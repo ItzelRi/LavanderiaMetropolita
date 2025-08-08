@@ -10,15 +10,13 @@ class Order(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now())
     estimated_delivery_date = db.Column(db.DateTime, nullable=False)
     real_delivery_date = db.Column(db.DateTime)
-    state = db.Column(db.String(20), default="Recibido") #recibido, en proceso, listo, entregado
+    state = db.Column(db.String(20), default="recibido") #recibido, en proceso, listo, entregado
     total = db.Column(db.Integer, nullable=False)
     pagado = db.Column(db.Boolean, default=False)
-    #RELACIONES INVERSAS PENDIENTES
-    garments = db. relationship("Garment", backref="order", lazy=True)
     #Relacion de pago
 
     def to_dict(self, garments:bool=False):
-        """ order = {
+       """  order = {
             "id":self.id,
             "client_id":self.client_id,
             "user_id":self.user_id,
@@ -32,4 +30,4 @@ class Order(db.Model):
         if garments:
             order["garments"] = self.garments
         return order """
-        return self.__dict__
+       return self.__dict__

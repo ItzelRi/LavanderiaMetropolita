@@ -5,8 +5,7 @@ import {  Pressable, StyleSheet, Text, TextInput, View, Alert } from "react-nati
 
 export const CreateS=()=>{
     const [data, setData] = useState({})
-  
-    const {navigate}= useNavigation()
+
     const onChange=(target, value)=>{
       const newData=data
       console.log(target, value)
@@ -15,14 +14,16 @@ export const CreateS=()=>{
     }
 
       const CreateService= async()=>{
-    try {
+      try {
         console.log("mandare ", data)
-        //await axios.post("https://ngntrmk5-5000.usw3.devtunnels.ms/services/create", data)
+        await axios.post("https://7qnhlz7j-5000.usw3.devtunnels.ms/services/create", data)
       Alert.alert("Creado!", "El servicio se ha creado con exito")
     } catch (error) {
       Alert.alert("Algo salio mal", `No se ha creado el servicio, ${error}`)
     }
   }
+
+  const {navigate} = useNavigation();
 
   return (
     <>

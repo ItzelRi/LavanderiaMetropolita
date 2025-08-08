@@ -15,7 +15,7 @@ export const CreateC = () => {
   const CreateClient = async() =>{
     try {
       console.log("mandare ", data)
-      await axios.post("https://ngntrmk5-5000.usw3.devtunnels.ms/clients/create", data)
+      await axios.post("https://7qnhlz7j-5000.usw3.devtunnels.ms/clients/create", data)
       Alert.alert("Creado!", "Su cliente se ha creado con exito"
       )
     } catch (error) {

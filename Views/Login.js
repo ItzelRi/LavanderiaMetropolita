@@ -14,7 +14,7 @@ const onChange = (target, value) => {
 
 const LoginUser = async() =>{
     try {
-      const userLoged=await axios.post("https://ngntrmk5-5000.usw3.devtunnels.ms/users/login", data)
+      const userLoged=await axios.post("https://7qnhlz7j-5000.usw3.devtunnels.ms/users/login", data)
       Alert.alert("Inicio sesion!", "Ha iniciado sesion con exito"
       )
     } catch (error) {
