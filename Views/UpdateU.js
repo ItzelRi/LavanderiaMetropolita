@@ -34,19 +34,19 @@ export const UpdateU=({route})=>{
 
           <Text style={styles.label}>Nombre:</Text>
           <TextInput style={styles.input} onChangeText={(text) => onChange("name", text)}
-          placeholder={userData.type}></TextInput>
+          placeholder={userData.name}></TextInput>
 
           <Text style={styles.label}>Correo:</Text>
           <TextInput style={styles.input} onChangeText={(text) => onChange("email", text)} 
-          placeholder={userData.description}></TextInput>
+          placeholder={userData.email}></TextInput>
 
           <Text style={styles.label}>Rol:</Text>
           <TextInput style={styles.input} onChangeText={(text) => onChange("rol", text)}
-            placeholder={userData.observations}></TextInput>
+            placeholder={userData.rol}></TextInput>
 
-          <Text style={styles.label}>Estado:</Text>
-          <TextInput style={styles.input} onChangeText={(text) => onChange("state", text)}
-            placeholder={userData.observations}></TextInput>
+          <Text style={styles.label}>Contraseña:</Text>
+          <TextInput style={styles.input} onChangeText={(text) => onChange("password", text)}
+            placeholder={userData.password}></TextInput>
 
           <Pressable style={styles.send} onPress={() => updateUser()}>
             <Text style={styles.textButton}>Actualizar</Text>
